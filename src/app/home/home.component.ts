@@ -1,13 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PokemonDetail } from '../interfaces/pokemonDetail.interfaces';
 import { PokeapiService } from '../service/pokeapi.service';
 import { Pokemon } from '../interfaces/pokemon.interface';
-import { Observable, forkJoin, map, switchMap } from 'rxjs';
-
-export interface Obja {
-  name?: string;
-  imagen?: string;
-}
 
 @Component({
   selector: 'app-home',
@@ -21,8 +14,8 @@ export class HomeComponent implements OnInit {
   pokemons: Pokemon[] = [];
   dataSource: any[] = [this.pokemons];
 
-  public offset: number = 20;
-  public limit: number = 20;
+  offset: number = 0;
+  limit: number = 20;
 
   constructor(private pokemonService: PokeapiService) {}
 
@@ -32,27 +25,25 @@ export class HomeComponent implements OnInit {
 
   getPokemonsPage(offset: number, limit: number) {
     this.pokemonService.getPokemonList(offset, limit).subscribe({
-      next: (data) => {
-        data.map((poke) => {
-          this.pokemonService.getPokemonDetail(poke.name).subscribe({
-            next: (dataDetail) => {
+      next: data => {
+        let pokemons: Pokemon[] = []
+        const {results} = data as any;
+        this.pokemons = results.map((item: any) => {
+          this.pokemonService.getPokemonDetail(item.name).subscribe({
+            next: (data) => {
               const pokemon: Pokemon = {
-                name: dataDetail.name,
-                image: dataDetail.sprites.front_default,
-                weight: dataDetail.weight,
-                height: dataDetail.height,
+                name: data.name,
+                image: data.sprites.front_default,
+                weight: data.weight,
+                height: data.height,
               };
-
-              this.pokemons.push(pokemon);
-              console.log(this.pokemons)
-            },
-            error: (error) => console.error(error),
-          });
-        });
+              pokemons.push(pokemon)
+              this.pokemons = [...pokemons, pokemon]
+            }
+          })
+        })
       },
-      error: (error) => console.error(error),
-    });
-
-    console.log(this.pokemons);
+      error: e => console.error(e)
+    })
   }
 }

@@ -3,7 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
-  {path: 'Pokemons', component: HomeComponent},
+  { path: '', redirectTo: 'pokemons', pathMatch: "full"},
+  {path: 'pokemons', component: HomeComponent},
 ];
 
 @NgModule({
