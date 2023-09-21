@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PokeapiService } from '../service/pokeapi.service';
+
+import { PokemonDetail } from './../interfaces/pokemonDetail.interfaces';
 
 @Component({
   selector: 'app-card-component',
@@ -8,14 +10,18 @@ import { PokeapiService } from '../service/pokeapi.service';
   styleUrls: ['./card-component.component.css'],
 })
 export class CardComponentComponent implements OnInit {
-  parametro: string | null | undefined;
-
-  constructor(private route: ActivatedRoute, private pokemonService: PokeapiService) {}
+  private route: ActivatedRoute = inject(ActivatedRoute)
+  private pokemonService: PokeapiService = inject(PokeapiService)
+  name: string | null = '';
+  pokemon: PokemonDetail | undefined;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      this.parametro = params.get('parametro');
-      console.log('Parámetro recibido:', this.parametro);
+      this.name = params.get('name');
+      this.pokemonService.getPokemonDetail(this.name as string).subscribe({
+        next: data => this.pokemon = data,
+        error: e => console.error(e)
+      })
     });
   }
 }

@@ -3,5 +3,4 @@ export interface Pokemon {
   image: string;
   weight: number;
   height: number;
-  url: string
 }

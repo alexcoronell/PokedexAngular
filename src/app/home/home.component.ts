@@ -36,7 +36,6 @@ export class HomeComponent implements OnInit {
                 image: dataDetail.sprites.front_default,
                 weight: dataDetail.weight,
                 height: dataDetail.height,
-                url: data.url
               };
               pokemons.push(pokemon)
               this.pokemons = [...pokemons, pokemon]
