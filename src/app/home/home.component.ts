@@ -30,12 +30,13 @@ export class HomeComponent implements OnInit {
         const {results} = data as any;
         this.pokemons = results.map((item: any) => {
           this.pokemonService.getPokemonDetail(item.name).subscribe({
-            next: (data) => {
+            next: (dataDetail) => {
               const pokemon: Pokemon = {
-                name: data.name,
-                image: data.sprites.front_default,
-                weight: data.weight,
-                height: data.height,
+                name: dataDetail.name,
+                image: dataDetail.sprites.front_default,
+                weight: dataDetail.weight,
+                height: dataDetail.height,
+                url: data.url
               };
               pokemons.push(pokemon)
               this.pokemons = [...pokemons, pokemon]
