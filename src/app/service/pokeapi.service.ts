@@ -7,18 +7,12 @@ import { Pokemon } from '../interfaces/pokemon.interface';
   providedIn: 'root',
 })
 export class PokeapiService {
-
   private http: HttpClient = inject(HttpClient);
+
   private urlApi = 'https://pokeapi.co/api/v2/';
 
-  constructor() {}
-
-  getPokemonList(offset: number, limit: number): Observable<Pokemon[]> {
-    return this.http
-      .get<Pokemon[]>(
-        this.urlApi + 'pokemon?offset=' + offset + '&limit=' + limit
-      )
-      .pipe(map((x: any) => x.results));
+  getPokemonList(offset: number, limit: number) {
+    return this.http.get<any>(this.urlApi + 'pokemon?offset=' + offset + '&limit=' + limit);
   }
 
   getPokemonDetail(pokemon: number | string) {
